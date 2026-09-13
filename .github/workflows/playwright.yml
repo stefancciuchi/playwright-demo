@@ -40,7 +40,6 @@ jobs:
           SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
 
   e2e-cross-browser-and-platform:
-    needs: e2e
     runs-on: ubuntu-latest
 
     steps:
@@ -98,6 +97,7 @@ jobs:
           --project=chromium
 
   accessibility-corrected:
+    needs: e2e
     runs-on: ubuntu-latest
 
     steps:
