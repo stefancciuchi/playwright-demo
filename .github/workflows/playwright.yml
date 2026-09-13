@@ -150,6 +150,14 @@ jobs:
           path: playwright-report/
           retention-days: 2
 
+      - name: Upload BrowserStack test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: browserstack-test-results
+          path: test-results/
+          retention-days: 2
+
   accessibility-before:
     continue-on-error: true
     runs-on: ubuntu-latest

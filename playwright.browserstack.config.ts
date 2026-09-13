@@ -11,7 +11,11 @@ const browserstackAccessKey = getRequiredEnv('BROWSERSTACK_ACCESS_KEY');
 
 type BrowserStackCapabilities = Record<string, string | boolean>;
 
-function createBrowserStackProject(name: string, capabilities: BrowserStackCapabilities) {
+function createBrowserStackProject(
+  name: string,
+  capabilities: BrowserStackCapabilities,
+  device: Record<string, unknown> = {},
+) {
   const projectCapabilities = {
     ...capabilities,
     name,
@@ -29,6 +33,7 @@ function createBrowserStackProject(name: string, capabilities: BrowserStackCapab
   return {
     name,
     use: {
+      ...device,
       connectOptions: {
         wsEndpoint,
       },
@@ -39,6 +44,11 @@ function createBrowserStackProject(name: string, capabilities: BrowserStackCapab
 export default defineConfig({
   testDir: './tests/e2e',
   reporter: 'html',
+  use: {
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
+  },
   projects: [
     createBrowserStackProject('BS Chrome Windows', {
       browser: 'chrome',
@@ -58,21 +68,21 @@ export default defineConfig({
       os: 'os x',
       os_version: 'ventura',
     }),
-    createBrowserStackProject('BS Chrome Android', {
+    createBrowserStackProject('BS Chrome Pixel 7', {
       browser: 'chrome',
       browser_version: 'latest',
-      device_name: 'Google Pixel 7',
+      device_name: 'Pixel 7',
       real_mobile: true,
       os: 'android',
       os_version: '13.0',
     }),
-    createBrowserStackProject('BS Safari iPhone', {
+    createBrowserStackProject('BS Safari iPhone 14', {
       browser: 'playwright-webkit',
       browser_version: 'latest',
       device_name: 'iPhone 14',
       real_mobile: true,
       os: 'ios',
-      os_version: '16',
+      os_version: '16.0',
     }),
   ],
 });
