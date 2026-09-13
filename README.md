@@ -21,6 +21,11 @@ A couple of additional things were added to the utils folder as a way to separat
   - selectors/
   - test_data/
 
+## Demo Links:
+- The CI/CD report on all the tests can be viewed [here](https://stefancciuchi.github.io/playwright-demo/)
+- Access to the Percy Build Dashboard is [here](https://percy.io/14adfb64/web/automation-demo-59848a07)
+- To access the Browserstack Build Dashboard [click here](https://automate.browserstack.com/projects/Default+Project/builds/playwright-demo/1?tab=sessions)
+
 ### Installation
 
 You need the following installed:
@@ -93,6 +98,8 @@ Added Percy and ran a build against the SauceDemo web app on its product catalog
 ```
 percy exec -- npx playwright test tests/visual_regression --project=chromium
 ```
+
+[Click here to access the Percy Build Dashboard](https://percy.io/14adfb64/web/automation-demo-59848a07)
 
 ### Browserstack Integration
 
