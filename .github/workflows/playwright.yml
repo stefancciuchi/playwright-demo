@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  e2e:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,32 +30,96 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
+      - name: Install browser dependencies
         run: npx playwright install --with-deps chromium
 
       - name: E2E Tests
         run: npx playwright test tests/e2e --project=chromium
-        continue-on-error: true
         env:
           SAUCEDEMO_USERNAME: ${{ secrets.SAUCEDEMO_USERNAME }}
           SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
 
-      - name: Accessibility Scan
-        run: npx playwright test tests/accessibility/** --project=chromium
-        continue-on-error: true
+  e2e-cross-browser-and-platform:
+    needs: e2e
+    runs-on: ubuntu-latest
 
-      - name: Upload Playwright report
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 2
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Upload test results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          name: test-results
-          path: test-results/
-          retention-days: 2
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install browser dependencies
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Cross Browser and Platform E2E Tests
+        run: >-
+          npx playwright test tests/e2e
+          --project=firefox
+          --project=webkit
+          --project="Mobile Chrome"
+          --project="Mobile Safari"
+        env:
+          SAUCEDEMO_USERNAME: ${{ secrets.SAUCEDEMO_USERNAME }}
+          SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
+
+  accessibility-before:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install browser dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Accessibility Scan - Before Corrections
+        run: >-
+          npx playwright test
+          tests/accessibility/full_page_scans/w3_survey_app_with_violations.spec.ts
+          tests/accessibility/component_scans/w3_survey_components_check.spec.ts
+          tests/accessibility/component_scans/w3_survey_controls_check.spec.ts
+          --project=chromium
+
+  accessibility-corrected:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install browser dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Accessibility Scan - After Corrections
+        run: >-
+          npx playwright test
+          tests/accessibility/full_page_scans/w3_survey_app_with_corrected_violations.spec.ts
+          tests/accessibility/component_scans/w3_survey_components_corrected_check.spec.ts
+          tests/accessibility/component_scans/w3_survey_controls_corrected_check.spec.ts
+          --project=chromium
