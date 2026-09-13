@@ -1,0 +1,23 @@
+{
+  "name": "playwright-demo",
+  "version": "1.0.0",
+  "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/stefan.ciuchi/playwright-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/stefan.ciuchi/playwright-demo/issues"
+  },
+  "homepage": "https://gitlab.com/stefan.ciuchi/playwright-demo#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.5.1",
+    "typescript": "^7.0.2"
+  }
+}
