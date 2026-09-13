@@ -103,10 +103,13 @@ percy exec -- npx playwright test tests/visual_regression --project=chromium
 
 ### Browserstack Integration
 
-After configuring the demo project in browserstack, you need to set the username nad accesskey in the env (if running locally) and repo settings when running in ci/cd pipeline.
+After configuring the demo project in BrowserStack, set `BROWSERSTACK_USERNAME` and
+`BROWSERSTACK_ACCESS_KEY` in `.env` when running locally. In CI/CD, I added them as repository secrets.
+
+The SDK reads the platforms from `browserstack.yml`.
 
 ```
-npx playwright test --config=playwright.browserstack.config.ts
+npm run test:browserstack
 ```
 Visit the following URL if you want to see the browserstack integration in action.
 

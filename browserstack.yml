@@ -1,0 +1,37 @@
+userName: ${BROWSERSTACK_USERNAME}
+accessKey: ${BROWSERSTACK_ACCESS_KEY}
+
+projectName: playwright-demo
+buildName: ${BROWSERSTACK_BUILD_NAME}
+buildIdentifier: '#${BUILD_NUMBER}'
+
+platforms:
+  - os: Windows
+    osVersion: 11
+    browserName: chrome
+    browserVersion: latest
+  - os: Windows
+    osVersion: 11
+    browserName: playwright-firefox
+    browserVersion: latest
+  - os: OS X
+    osVersion: Ventura
+    browserName: playwright-webkit
+    browserVersion: latest
+  - os: android
+    osVersion: '13.0'
+    deviceName: Pixel 7
+    browserName: chrome
+    browserVersion: latest
+  - os: ios
+    osVersion: '16.0'
+    deviceName: iPhone 14
+    browserName: playwright-webkit
+    browserVersion: latest
+
+parallelsPerPlatform: 1
+browserstackLocal: false
+debug: true
+networkLogs: true
+consoleLogs: verbose
+testReporting: true

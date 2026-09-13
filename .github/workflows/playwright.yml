@@ -139,6 +139,7 @@ jobs:
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_BUILD_NAME: "GitHub Actions #${{ github.run_number }}"
+          BUILD_NUMBER: ${{ github.run_number }}
           SAUCEDEMO_USERNAME: ${{ secrets.SAUCEDEMO_USERNAME }}
           SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
 
@@ -237,6 +238,7 @@ jobs:
     needs:
       - e2e
       - e2e-cross-browser-and-platform
+      - browserstack
       - accessibility-before
       - accessibility-corrected
     if: ${{ always() }}
