@@ -7,6 +7,8 @@
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
     "test:headed": "npx playwright test --headed",
+    "test:accessibility": "npx playwright test accessibility",
+    "test:accessibility:ui": "npx playwright test accessibility --ui",
     "test:report": "npx playwright show-report"
   },
   "repository": {
