@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:headed": "npx playwright test --headed",
+    "test:report": "npx playwright show-report"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@gitlab.com/stefan.ciuchi/playwright-demo.git"
@@ -19,5 +24,8 @@
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.1",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.13.0"
   }
 }
