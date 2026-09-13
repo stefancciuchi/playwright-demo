@@ -47,13 +47,13 @@ export default defineConfig({
       os_version: '11',
     }),
     createBrowserStackProject('BS Firefox Windows', {
-      browser: 'firefox',
+      browser: 'playwright-firefox',
       browser_version: 'latest',
       os: 'windows',
       os_version: '11',
     }),
     createBrowserStackProject('BS Safari macOS', {
-      browser: 'safari',
+      browser: 'playwright-webkit',
       browser_version: 'latest',
       os: 'os x',
       os_version: 'ventura',
@@ -67,7 +67,7 @@ export default defineConfig({
       os_version: '13.0',
     }),
     createBrowserStackProject('BS Safari iPhone', {
-      browser: 'safari',
+      browser: 'playwright-webkit',
       browser_version: 'latest',
       device_name: 'iPhone 14',
       real_mobile: true,
