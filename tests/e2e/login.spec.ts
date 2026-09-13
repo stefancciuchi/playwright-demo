@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { getRequiredEnv } from '../../utils/helpers/get_required_env';
 import SAUCEDEMO_LINKS from '../../utils/app_urls/saucedemo_links';
 import SAUCEDEMO_LOGIN from '../../utils/selectors/saucedemo_login';
 import SAUCEDEMO_MESSAGES from '../../utils/expected_text/saucedemo_messages';
 import SAUCEDEMO_CREDENTIALS from '../../utils/test_data/saucedemo_credentials';
 
-const saucedemoUsername = process.env.SAUCEDEMO_USERNAME;
-const saucedemoPassword = process.env.SAUCEDEMO_PASSWORD;
+const saucedemoUsername = getRequiredEnv('SAUCEDEMO_USERNAME');
+const saucedemoPassword = getRequiredEnv('SAUCEDEMO_PASSWORD');
 
 test.describe('SauceDemo Login Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -19,9 +20,6 @@ test.describe('SauceDemo Login Page', () => {
   });
 
   test('should allow user to log in with valid credentials and redirect to product catalogue', async ({ page }) => {
-    if (!saucedemoUsername || !saucedemoPassword) {
-      throw new Error('SAUCEDEMO_USERNAME and SAUCEDEMO_PASSWORD must be set');
-    }
 
     await page.fill(SAUCEDEMO_LOGIN.USERNAME_INPUT, saucedemoUsername);
     await page.fill(SAUCEDEMO_LOGIN.PASSWORD_INPUT, saucedemoPassword);
