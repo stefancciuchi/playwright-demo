@@ -106,8 +106,6 @@ percy exec -- npx playwright test tests/visual_regression --project=chromium
 After configuring the demo project in BrowserStack, set `BROWSERSTACK_USERNAME` and
 `BROWSERSTACK_ACCESS_KEY` in `.env` when running locally. In CI/CD, I added them as repository secrets.
 
-The SDK reads the platforms from `browserstack.yml`.
-
 ```
 npm run test:browserstack
 ```

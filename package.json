@@ -10,7 +10,7 @@
     "test:e2e:ui": "npx playwright test tests/e2e --ui",
     "test:e2e:headed": "npx playwright test tests/e2e --headed",
     "test:e2e:cross-browser": "npx playwright test tests/e2e --project=firefox --project=webkit --project=\"Mobile Chrome\" --project=\"Mobile Safari\"",
-    "test:browserstack": "node -r dotenv/config node_modules/browserstack-node-sdk/src/bin/runner.js playwright",
+    "test:browserstack": "npx playwright test --config=playwright.browserstack.config.ts",
     "test:visual": "percy exec -- npx playwright test tests/visual_regression --project=chromium",
     "test:accessibility": "npx playwright test accessibility",
     "test:accessibility:ui": "npx playwright test accessibility --ui",
