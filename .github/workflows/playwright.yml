@@ -115,6 +115,41 @@ jobs:
           SAUCEDEMO_USERNAME: ${{ secrets.SAUCEDEMO_USERNAME }}
           SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
 
+  browserstack:
+    needs: e2e-cross-browser-and-platform
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run BrowserStack E2E tests
+        run: npm run test:browserstack
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          BROWSERSTACK_BUILD_NAME: "GitHub Actions #${{ github.run_number }}"
+          SAUCEDEMO_USERNAME: ${{ secrets.SAUCEDEMO_USERNAME }}
+          SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
+
+      - name: Upload BrowserStack Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: browserstack-playwright-report
+          path: playwright-report/
+          retention-days: 2
+
   accessibility-before:
     continue-on-error: true
     runs-on: ubuntu-latest
