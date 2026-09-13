@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: playwright-${{ github.workflow }}-${{ github.ref }}
@@ -34,10 +36,18 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: E2E Tests
-        run: npx playwright test tests/e2e --project=chromium
+        run: npx playwright test tests/e2e --project=chromium --reporter=blob
         env:
           SAUCEDEMO_USERNAME: ${{ secrets.SAUCEDEMO_USERNAME }}
           SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
+
+      - name: Upload E2E blob report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-blob-e2e
+          path: blob-report/
+          retention-days: 2
 
   e2e-cross-browser-and-platform:
     runs-on: ubuntu-latest
@@ -65,9 +75,18 @@ jobs:
           --project=webkit
           --project="Mobile Chrome"
           --project="Mobile Safari"
+          --reporter=blob
         env:
           SAUCEDEMO_USERNAME: ${{ secrets.SAUCEDEMO_USERNAME }}
           SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
+
+      - name: Upload cross-browser blob report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-blob-cross-browser
+          path: blob-report/
+          retention-days: 2
 
   accessibility-before:
     continue-on-error: true
@@ -96,6 +115,15 @@ jobs:
           tests/accessibility/component_scans/w3_survey_components_check.spec.ts
           tests/accessibility/component_scans/w3_survey_controls_check.spec.ts
           --project=chromium
+          --reporter=blob
+
+      - name: Upload before accessibility blob report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-blob-accessibility-before
+          path: blob-report/
+          retention-days: 2
 
   accessibility-corrected:
     needs: accessibility-before
@@ -125,3 +153,87 @@ jobs:
           tests/accessibility/component_scans/w3_survey_components_corrected_check.spec.ts
           tests/accessibility/component_scans/w3_survey_controls_corrected_check.spec.ts
           --project=chromium
+          --reporter=blob
+
+      - name: Upload corrected accessibility blob report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-blob-accessibility-corrected
+          path: blob-report/
+          retention-days: 2
+
+  publish-report:
+    needs:
+      - e2e
+      - e2e-cross-browser-and-platform
+      - accessibility-before
+      - accessibility-corrected
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download E2E blob report
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-blob-e2e
+          path: blob-reports/e2e
+
+      - name: Download cross-browser blob report
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-blob-cross-browser
+          path: blob-reports/cross-browser
+
+      - name: Download before accessibility blob report
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-blob-accessibility-before
+          path: blob-reports/accessibility-before
+
+      - name: Download corrected accessibility blob report
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-blob-accessibility-corrected
+          path: blob-reports/accessibility-corrected
+
+      - name: Combine blob reports
+        shell: bash
+        run: |
+          mkdir -p merged-blob-reports
+          index=0
+          while IFS= read -r -d '' report; do
+            cp "$report" "merged-blob-reports/blob-$index.zip"
+            index=$((index + 1))
+          done < <(find blob-reports -type f -name '*.zip' -print0)
+
+      - name: Merge Playwright reports
+        run: npx playwright merge-reports --reporter=html merged-blob-reports
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload merged report to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: playwright-report/
+
+      - name: Deploy merged report to GitHub Pages
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        id: deployment
+        uses: actions/deploy-pages@v4
