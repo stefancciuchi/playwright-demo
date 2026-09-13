@@ -70,6 +70,7 @@ jobs:
           SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
 
   accessibility-before:
+    continue-on-error: true
     runs-on: ubuntu-latest
 
     steps:
@@ -97,7 +98,8 @@ jobs:
           --project=chromium
 
   accessibility-corrected:
-    needs: e2e
+    needs: accessibility-before
+    if: ${{ always() }}
     runs-on: ubuntu-latest
 
     steps:
