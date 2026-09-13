@@ -1,4 +1,4 @@
-const SURVEY_APP_HOMEPAGE_SELECTORS = {
+const SURVEYAPP_HOMEPAGE = {
     PARK_PREFERENCE_RADIO_GROUP: 'input[name="res"]',
     CITY_SELECTOR: 'select[name="cc"]',
     NEWSLETTER_FIELDS: 'input[type="text"]',
@@ -6,4 +6,4 @@ const SURVEY_APP_HOMEPAGE_SELECTORS = {
     SURVEY_TABLE: 'table',
 };
 
-export default SURVEY_APP_HOMEPAGE_SELECTORS;
+export default SURVEYAPP_HOMEPAGE;

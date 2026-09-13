@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import type { AxeResults } from 'axe-core';
 import SURVEY_APP_LINKS from '../../../utils/app_urls/survey_links';
-import SURVEY_APP_HOMEPAGE_SELECTORS from '../../../utils/selectors/survey_homepage';
+import SURVEYAPP_HOMEPAGE from '../../../utils/selectors/survey_homepage';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21aa'];
 
@@ -23,7 +23,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('survey control scans', () => {
   test('park preference radio group should have no accessibility violations', async ({ page }) => {
     const scan = await new AxeBuilder({ page })
-      .include(SURVEY_APP_HOMEPAGE_SELECTORS.PARK_PREFERENCE_RADIO_GROUP)
+      .include(SURVEYAPP_HOMEPAGE.PARK_PREFERENCE_RADIO_GROUP)
       .withTags(WCAG_TAGS)
       .analyze();
 
@@ -32,7 +32,7 @@ test.describe('survey control scans', () => {
 
   test('city selector should have no accessibility violations', async ({ page }) => {
     const scan = await new AxeBuilder({ page })
-      .include(SURVEY_APP_HOMEPAGE_SELECTORS.CITY_SELECTOR)
+      .include(SURVEYAPP_HOMEPAGE.CITY_SELECTOR)
       .withTags(WCAG_TAGS)
       .analyze();
 
@@ -41,7 +41,7 @@ test.describe('survey control scans', () => {
 
   test('newsletter fields should have no accessibility violations', async ({ page }) => {
     const scan = await new AxeBuilder({ page })
-      .include(SURVEY_APP_HOMEPAGE_SELECTORS.NEWSLETTER_FIELDS)
+      .include(SURVEYAPP_HOMEPAGE.NEWSLETTER_FIELDS)
       .withTags(WCAG_TAGS)
       .analyze();
 
@@ -51,7 +51,7 @@ test.describe('survey control scans', () => {
   test('newsletter fields can exclude the known legacy city selector issue', async ({ page }) => {
     const scan = await new AxeBuilder({ page })
       .include('form')
-      .exclude(SURVEY_APP_HOMEPAGE_SELECTORS.CITY_SELECTOR)
+      .exclude(SURVEYAPP_HOMEPAGE.CITY_SELECTOR)
       .withTags(WCAG_TAGS)
       .analyze();
 
