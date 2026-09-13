@@ -9,6 +9,7 @@
     "test:all:headed": "npx playwright test --headed",
     "test:e2e:ui": "npx playwright test tests/e2e --ui",
     "test:e2e:headed": "npx playwright test tests/e2e --headed",
+    "test:visual": "percy exec -- npx playwright test tests/visual --project=chromium",
     "test:accessibility": "npx playwright test accessibility",
     "test:accessibility:ui": "npx playwright test accessibility --ui",
     "test:report": "npx playwright show-report"
@@ -25,6 +26,8 @@
   },
   "homepage": "https://gitlab.com/stefan.ciuchi/playwright-demo#readme",
   "devDependencies": {
+    "@percy/cli": "^1.32.9",
+    "@percy/playwright": "^1.1.2",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.1",
     "dotenv": "^17.4.2",
